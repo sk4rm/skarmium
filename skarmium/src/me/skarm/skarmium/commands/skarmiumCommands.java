@@ -1,5 +1,6 @@
 package me.skarm.skarmium.commands;
 
+import de.tr7zw.nbtapi.NBTTileEntity;
 import me.skarm.skarmium.items.skarmiumItems;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -101,11 +102,15 @@ public class skarmiumCommands implements CommandExecutor {
 
                     // flag remove
                     case "remove":
-                        if (player.getWorld().getBlockAt(player.getLocation()).getType() == Material.GRAY_BANNER || player.getWorld().getBlockAt(player.getLocation()).getType() == Material.BLUE_BANNER || player.getWorld().getBlockAt(player.getLocation()).getType() == Material.RED_BANNER) {
+                        NBTTileEntity flagToRemove = new NBTTileEntity(player.getWorld().getBlockAt(player.getLocation()).getState());
+                        String nameOfFlag = flagToRemove.getString("CustomName");
+                        if (nameOfFlag.equalsIgnoreCase("{\"text\":\"§7§lNeutral Flag§f\"}") ||
+                            nameOfFlag.equalsIgnoreCase("{\"text\":\"§c§lRed Flag§f\"}") ||
+                            nameOfFlag.equalsIgnoreCase("{\"text\":\"§9§lBlue Flag§f\"}")) {
                             player.sendMessage(prefix_diamond + "Flag removed");
                             player.getWorld().getBlockAt(player.getLocation()).setType(Material.AIR);
                         } else {
-                            player.sendMessage(prefix_error + "There aren't any gray, blue or red flags in your current location");
+                            player.sendMessage(prefix_error + "There aren't any gray, blue or red flags at your current location");
                         }
                         break;
 
