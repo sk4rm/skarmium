@@ -87,12 +87,16 @@ public class skarmiumEvents implements Listener {
                     Player player = event.getPlayer();
                     Block block = event.getClickedBlock();
                     // block above clicked
-                    Block block_above = player.getWorld().getBlockAt(block.getX(), block.getY()+1, block.getZ());
+                    Block block_above = player.getWorld().getBlockAt(block.getX(), block.getY() + 1, block.getZ());
                     // block above the block above clicked
-                    Block block_above_above = player.getWorld().getBlockAt(block.getX(), block.getY()+2, block.getZ());
+                    Block block_above_above = player.getWorld().getBlockAt(block.getX(), block.getY() + 2, block.getZ());
+
+                    // check if attempting to place flag on a gray banner
+                    if (block_above.getType() == Material.GRAY_BANNER) {
+                        player.sendMessage("§e(!) You can't place a flag there");
 
                     // check if two blocks above the clicked block is empty so to to place a banner
-                    if (block_above.getType() == Material.AIR && block_above_above.getType() == Material.AIR) {
+                    } else if (block_above.getType() == Material.AIR && block_above_above.getType() == Material.AIR) {
                         // block_above is also the block position where the flag stands
                         block_above.setType(Material.GRAY_BANNER);
                         // rotate the flag so that it faces the player
