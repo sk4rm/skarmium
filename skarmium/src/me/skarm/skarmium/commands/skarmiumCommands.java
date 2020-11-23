@@ -85,6 +85,7 @@ public class skarmiumCommands implements CommandExecutor {
                         player.sendMessage("help - show this help dialogue");
                         player.sendMessage("tool - gives a player a flag tool");
                         player.sendMessage("set - settings for a flag");
+                        player.sendMessage("remove - for removing any unbreakable gray, blue and red flag you are standing on");
                         break;
 
                     // flag tool
@@ -104,7 +105,7 @@ public class skarmiumCommands implements CommandExecutor {
                             player.sendMessage(prefix_diamond + "Flag removed");
                             player.getWorld().getBlockAt(player.getLocation()).setType(Material.AIR);
                         } else {
-                            player.sendMessage(prefix_error + "There aren't any flags in your current location");
+                            player.sendMessage(prefix_error + "There aren't any gray, blue or red flags in your current location");
                         }
                         break;
 
