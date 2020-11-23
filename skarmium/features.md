@@ -1,3 +1,6 @@
+#### Dependencies
+* NBTAPI - <https://www.spigotmc.org/resources/nbt-api.7939/>
+
 #### Features
 * Welcome message when joining server.
 * Auto-"zzz" when sleeping.
@@ -12,6 +15,7 @@
 * Flag Tool
 
 #### Item Rarity
+* Trash (Gray)              ☆☆☆☆☆     §7
 * Common (white)            ★☆☆☆☆     §f
 * Uncommon (yellow)         ★★☆☆☆     §e
 * Rare (green)              ★★★☆☆     §a

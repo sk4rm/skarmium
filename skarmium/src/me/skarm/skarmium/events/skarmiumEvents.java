@@ -1,5 +1,6 @@
 package me.skarm.skarmium.events;
 
+import de.tr7zw.nbtapi.NBTTileEntity;
 import me.skarm.skarmium.items.skarmiumItems;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,6 +19,7 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.meta.BlockDataMeta;
 
 public class skarmiumEvents implements Listener {
 
@@ -91,6 +93,7 @@ public class skarmiumEvents implements Listener {
             if (event.getItem() != null) {
                 // so the item exists
                 // now check if held == tool
+
                 if (event.getItem().getItemMeta().equals(skarmiumItems.flagtool.getItemMeta())) {
                     Player player = event.getPlayer();
                     Block block = event.getClickedBlock();
@@ -98,6 +101,7 @@ public class skarmiumEvents implements Listener {
                     Block block_above = player.getWorld().getBlockAt(block.getX(), block.getY()+1, block.getZ());
                     // block above the block above clicked
                     Block block_above_above = player.getWorld().getBlockAt(block.getX(), block.getY()+2, block.getZ());
+
                     // check if two blocks above the clicked block is empty so to to place a banner
                     if (block_above.getType() == Material.AIR && block_above_above.getType() == Material.AIR) {
                         // block_above is also the block position where the flag stands
@@ -107,11 +111,16 @@ public class skarmiumEvents implements Listener {
                         // this is where the banner should be facing in terms of degrees
                         // starting from north where north = 0 degrees or 360 degrees
                         float bannerYaw = (player.getLocation().getYaw()) % 360.0f;
-                        System.out.println(bannerYaw);
-                        // convert yaw (degrees) to blockface (direction)
+                        // convert yaw (degrees) to BlockFace (direction)
                         flagRotation.setRotation(yawToFace(bannerYaw));
                         block_above.setBlockData(flagRotation);
+
+                        // set name to banner for future uses in code
+                        NBTTileEntity banner_nbt = new NBTTileEntity(block_above.getState());
+                        banner_nbt.setString("CustomName","{\"text\":\"§7§lNeutral Flag\"}");
+
                         player.sendMessage("§9<♢> A flag has been placed at your specified location");
+
                     } else {
                         player.sendMessage("§e(!) There are obstacles in the way");
                     }
@@ -123,6 +132,7 @@ public class skarmiumEvents implements Listener {
 
     @EventHandler
     public static void onFlagBreakAttempt (BlockDamageEvent event) {
+        // check if the block is the flag
         //
     }
 

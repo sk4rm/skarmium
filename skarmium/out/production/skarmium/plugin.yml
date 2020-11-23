@@ -3,7 +3,8 @@ version: 1.0
 author: skarm                     # [skarm, person1, person2]
 main: me.skarm.skarmium.skarmium
 api-version: 1.14                 # try 1.14 if something goes wrong
-                                  # depend: [<plugin1>, <plugin2>]
+depend: [NBTAPI]
+
 commands:
   heal:
     description: Heals player to max health

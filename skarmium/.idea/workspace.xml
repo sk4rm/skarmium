@@ -26,7 +26,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Server/plugins" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Dependencies/item-nbt-api-plugin-2.6.0.jar" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -57,18 +57,18 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="574" y="119" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1605884837770" />
-    <state x="473" y="154" key="FileChooserDialogImpl" timestamp="1606116917106">
+    <state x="473" y="154" key="FileChooserDialogImpl" timestamp="1606122807091">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="473" y="154" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1606116917106" />
-    <state x="249" y="0" key="SettingsEditor" timestamp="1605874230957">
+    <state x="473" y="154" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1606122807091" />
+    <state x="249" y="0" key="SettingsEditor" timestamp="1606122812958">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="249" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1605874230957" />
-    <state x="425" y="187" key="run.anything.popup" timestamp="1606098500394">
+    <state x="249" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1606122812958" />
+    <state x="425" y="187" key="run.anything.popup" timestamp="1606123773505">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="425" y="187" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1606098500394" />
+    <state x="425" y="187" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1606123773505" />
     <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1606051771024">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
