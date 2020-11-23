@@ -4,22 +4,18 @@ import de.tr7zw.nbtapi.NBTTileEntity;
 import me.skarm.skarmium.items.skarmiumItems;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Rotation;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Rotatable;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
-import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.meta.BlockDataMeta;
 
 public class skarmiumEvents implements Listener {
 
@@ -78,13 +74,6 @@ public class skarmiumEvents implements Listener {
         }
     }
 
-//    @EventHandler
-//    public static void onPlayerThrowEgg (PlayerEggThrowEvent event) {
-//        event.setHatching(true);
-//        event.setNumHatches((byte) 5);
-//        event.setHatchingType(EntityType.RABBIT);
-//    }
-
     @EventHandler
     public static void onPlayerRightClick (PlayerInteractEvent event) {
         // check for right click action
@@ -117,7 +106,7 @@ public class skarmiumEvents implements Listener {
 
                         // set name to banner for future uses in code
                         NBTTileEntity banner_nbt = new NBTTileEntity(block_above.getState());
-                        banner_nbt.setString("CustomName","{\"text\":\"§7§lNeutral Flag\"}");
+                        banner_nbt.setString("CustomName","{\"text\":\"§7§lNeutral Flag§f\"}");
 
                         player.sendMessage("§9<♢> A flag has been placed at your specified location");
 
@@ -131,9 +120,13 @@ public class skarmiumEvents implements Listener {
     }
 
     @EventHandler
-    public static void onFlagBreakAttempt (BlockDamageEvent event) {
-        // check if the block is the flag
-        //
+    public static void onFlagBreakAttempt (BlockBreakEvent event) {
+        NBTTileEntity block_nbt = new NBTTileEntity(event.getBlock().getState());
+        if (block_nbt.getString("CustomName").equalsIgnoreCase("{\"text\":\"§7§lNeutral Flag§f\"}")) {
+            // is flag
+            event.setCancelled(true);
+            event.getPlayer().sendMessage("§e(!) Remove the flag by standing on it and using '/flag remove'");
+        }
     }
 
 }

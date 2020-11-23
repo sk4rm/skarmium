@@ -15,7 +15,7 @@
 * Flag Tool
 
 #### Item Rarity
-* Trash (Gray)              ☆☆☆☆☆     §7
+* Unranked (Gray)           ☆☆☆☆☆     §7
 * Common (white)            ★☆☆☆☆     §f
 * Uncommon (yellow)         ★★☆☆☆     §e
 * Rare (green)              ★★★☆☆     §a

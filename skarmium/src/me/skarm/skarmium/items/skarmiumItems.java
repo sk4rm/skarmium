@@ -57,7 +57,7 @@ public class skarmiumItems {
         ItemMeta meta = item.getItemMeta();
         Objects.requireNonNull(meta).setDisplayName("§7Flag Tool");
         List<String> lore = new ArrayList<>();
-        lore.add("§aRare");
+        lore.add("§7Unranked");
         lore.add("§fPlaces a flag down.");
         lore.add("§fUse '/flag set' to set it up.");
         meta.setLore(lore);

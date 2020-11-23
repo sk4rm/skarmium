@@ -1,6 +1,7 @@
 package me.skarm.skarmium.commands;
 
 import me.skarm.skarmium.items.skarmiumItems;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -95,6 +96,16 @@ public class skarmiumCommands implements CommandExecutor {
                     // flag set
                     case "set":
                         player.sendMessage(prefix_diamond + "Flag settings: ");
+                        break;
+
+                    // flag remove
+                    case "remove":
+                        if (player.getWorld().getBlockAt(player.getLocation()).getType() == Material.GRAY_BANNER || player.getWorld().getBlockAt(player.getLocation()).getType() == Material.BLUE_BANNER || player.getWorld().getBlockAt(player.getLocation()).getType() == Material.RED_BANNER) {
+                            player.sendMessage(prefix_diamond + "Flag removed");
+                            player.getWorld().getBlockAt(player.getLocation()).setType(Material.AIR);
+                        } else {
+                            player.sendMessage(prefix_error + "There aren't any flags in your current location");
+                        }
                         break;
 
                     // flag fwehvawvieeg

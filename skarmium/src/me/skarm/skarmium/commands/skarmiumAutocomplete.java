@@ -19,6 +19,7 @@ public class skarmiumAutocomplete implements TabCompleter {
                 possible_arguments.add("help");
                 possible_arguments.add("tool");
                 possible_arguments.add("set");
+                possible_arguments.add("remove");
 
                 return possible_arguments;
             }
