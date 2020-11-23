@@ -20,7 +20,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class skarmiumEvents implements Listener {
 
     // custom function for converting yaw to a BlockFace direction
-    private static BlockFace yawToFace (float yawDegree) {
+    public static BlockFace yawToFace (float yawDegree) {
         BlockFace[] directions = {
                 BlockFace.NORTH,
                 BlockFace.NORTH_NORTH_EAST,
@@ -65,6 +65,7 @@ public class skarmiumEvents implements Listener {
 //        }
 //    }
 
+    // auto zzz
     @EventHandler
     public static void onPlayerSleep (PlayerBedEnterEvent event) {
         Player player = event.getPlayer();
@@ -74,6 +75,7 @@ public class skarmiumEvents implements Listener {
         }
     }
 
+    // place flag with flag tool
     @EventHandler
     public static void onPlayerRightClick (PlayerInteractEvent event) {
         // check for right click action
@@ -123,6 +125,7 @@ public class skarmiumEvents implements Listener {
         }
     }
 
+    // stop flag breaking
     @EventHandler
     public static void onFlagBreakAttempt (BlockBreakEvent event) {
         NBTTileEntity block_nbt = new NBTTileEntity(event.getBlock().getState());

@@ -18,10 +18,22 @@ public class skarmiumAutocomplete implements TabCompleter {
                 List<String> possible_arguments = new ArrayList<>();
                 possible_arguments.add("help");
                 possible_arguments.add("tool");
-                possible_arguments.add("set");
+                possible_arguments.add("team");
                 possible_arguments.add("remove");
 
                 return possible_arguments;
+            }
+        } else if (args.length == 2) {
+            if (cmd.getName().equalsIgnoreCase("flag")) {
+                // flag ... ...
+                if (args[0].equalsIgnoreCase("team")) {
+                    List<String> possible_arguments = new ArrayList<>();
+                    possible_arguments.add("red");
+                    possible_arguments.add("blue");
+                    possible_arguments.add("gray");
+
+                    return possible_arguments;
+                }
             }
         }
 
