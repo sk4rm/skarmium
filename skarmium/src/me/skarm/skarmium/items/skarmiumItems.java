@@ -20,11 +20,14 @@ public class skarmiumItems {
         LEGENDARY
     }
 
-    public static ItemStack wand, flagtool;
+    public static ItemStack wand, flagtool, grayFlag, redFlag, blueFlag;
 
     public static void init () {
         createWand();
         createFlagTool();
+        createGrayFlag();
+        createRedFlag();
+        createBlueFlag();
     }
 
     // Silver Stake
@@ -59,11 +62,52 @@ public class skarmiumItems {
         List<String> lore = new ArrayList<>();
         lore.add("§7Unranked");
         lore.add("§fPlaces a flag down.");
-        lore.add("§fUse '/flag set' to set it up.");
+        lore.add("§fUse '/flag team <color>' to set the color");
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         item.setItemMeta(meta);
         flagtool = item;
     }
 
+    private static void createGrayFlag () {
+        ItemStack item = new ItemStack(Material.GRAY_BANNER, 1);
+        ItemMeta meta = item.getItemMeta();
+        Objects.requireNonNull(meta).setDisplayName("§7§lNeutral Flag");
+        List<String> lore = new ArrayList<>();
+        lore.add("§7Unranked");
+        lore.add("§fA flag that belongs to no team");
+        meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.addEnchant(Enchantment.BINDING_CURSE, 1, false);
+        item.setItemMeta(meta);
+        grayFlag = item;
+    }
+
+    private static void createRedFlag () {
+        ItemStack item = new ItemStack(Material.RED_BANNER, 1);
+        ItemMeta meta = item.getItemMeta();
+        Objects.requireNonNull(meta).setDisplayName("§7§lRed Flag");
+        List<String> lore = new ArrayList<>();
+        lore.add("§6Legendary");
+        lore.add("§eA flag that belongs to §cRed Team");
+        meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.addEnchant(Enchantment.BINDING_CURSE, 1, false);
+        item.setItemMeta(meta);
+        redFlag = item;
+    }
+
+    private static void createBlueFlag () {
+        ItemStack item = new ItemStack(Material.BLUE_BANNER, 1);
+        ItemMeta meta = item.getItemMeta();
+        Objects.requireNonNull(meta).setDisplayName("§7§lBlue Flag");
+        List<String> lore = new ArrayList<>();
+        lore.add("§6Legendary");
+        lore.add("§eA flag that belongs to §9Blue Team");
+        meta.setLore(lore);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.addEnchant(Enchantment.BINDING_CURSE, 1, false);
+        item.setItemMeta(meta);
+        blueFlag = item;
+    }
 }

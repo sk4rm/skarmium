@@ -2,6 +2,7 @@ package me.skarm.skarmium.events;
 
 import de.tr7zw.nbtapi.NBTTileEntity;
 import me.skarm.skarmium.items.skarmiumItems;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -16,6 +17,8 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 
 public class skarmiumEvents implements Listener {
 
@@ -78,8 +81,8 @@ public class skarmiumEvents implements Listener {
     // place flag with flag tool
     @EventHandler
     public static void onPlayerRightClick (PlayerInteractEvent event) {
-        // check for right click action
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+        // check for right click action and make sure it only triggers once
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getHand() == EquipmentSlot.HAND) {
             // check if null
             if (event.getItem() != null) {
                 // so the item exists
@@ -94,8 +97,10 @@ public class skarmiumEvents implements Listener {
                     Block block_above_above = player.getWorld().getBlockAt(block.getX(), block.getY() + 2, block.getZ());
 
                     // check if attempting to place flag on a gray banner
-                    if (block_above.getType() == Material.GRAY_BANNER) {
-                        player.sendMessage("§e(!) You can't place a flag there");
+                    if (block.getType() == Material.GRAY_BANNER || block_above.getType() == Material.GRAY_BANNER ||
+                        block.getType() == Material.BLUE_BANNER || block_above.getType() == Material.BLUE_BANNER ||
+                        block.getType() == Material.RED_BANNER || block_above.getType() == Material.RED_BANNER) {
+                        player.sendMessage("§e(!) You can't place a flag there anymore");
 
                     // check if two blocks above the clicked block is empty so to to place a banner
                     } else if (block_above.getType() == Material.AIR && block_above_above.getType() == Material.AIR) {
@@ -128,11 +133,58 @@ public class skarmiumEvents implements Listener {
     // stop flag breaking
     @EventHandler
     public static void onFlagBreakAttempt (BlockBreakEvent event) {
+        Player player = event.getPlayer();
         NBTTileEntity block_nbt = new NBTTileEntity(event.getBlock().getState());
-        if (block_nbt.getString("CustomName").equalsIgnoreCase("{\"text\":\"§7§lNeutral Flag§f\"}")) {
-            // is flag
+        boolean isGrayFlag = event.getBlock().getType() == Material.GRAY_BANNER && block_nbt.getString("CustomName").equalsIgnoreCase("{\"text\":\"§7§lNeutral Flag§f\"}");
+        boolean isRedFlag = event.getBlock().getType() == Material.RED_BANNER && block_nbt.getString("CustomName").equalsIgnoreCase("{\"text\":\"§c§lRed Flag§f\"}");
+        boolean isBlueFlag = event.getBlock().getType() == Material.BLUE_BANNER && block_nbt.getString("CustomName").equalsIgnoreCase("{\"text\":\"§9§lBlue Flag§f\"}");
+        if (isGrayFlag || isRedFlag || isBlueFlag) {
+            // is valid flag
             event.setCancelled(true);
-            event.getPlayer().sendMessage("§e(!) Remove the flag by standing on it and using '/flag remove'");
+            player.sendMessage("§e(!) Remove the flag by standing on it and using '/flag remove'");
+            player.sendMessage("§e(!) If you are in a team, capture by right clicking it");
+        }
+    }
+
+    // flag capture woooooo!
+    @EventHandler
+    public static void onFlagCaptureAttempt (PlayerInteractEvent event) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getHand() == EquipmentSlot.HAND) {
+            // is right click block
+            // run whenever "is bare hand" or "is NOT holding flag tool"
+
+            if (event.getItem() == null || !event.getItem().getItemMeta().equals(skarmiumItems.flagtool.getItemMeta())) {
+                Player player = event.getPlayer();
+
+                // check for flag
+                NBTTileEntity flagToCapture = new NBTTileEntity(event.getClickedBlock().getState());
+                boolean isGrayFlag = event.getClickedBlock().getType() == Material.GRAY_BANNER && flagToCapture.getString("CustomName").equalsIgnoreCase("{\"text\":\"§7§lNeutral Flag§f\"}");
+                boolean isRedFlag = event.getClickedBlock().getType() == Material.RED_BANNER && flagToCapture.getString("CustomName").equalsIgnoreCase("{\"text\":\"§c§lRed Flag§f\"}");
+                boolean isBlueFlag = event.getClickedBlock().getType() == Material.BLUE_BANNER && flagToCapture.getString("CustomName").equalsIgnoreCase("{\"text\":\"§9§lBlue Flag§f\"}");
+                boolean isValidFlag = isGrayFlag || isRedFlag || isBlueFlag;
+                if (isValidFlag) {
+                    // is valid flag
+                    String nameOfFlag;
+                    ItemStack flagToWear;
+                    if (isRedFlag) {
+                        nameOfFlag = "§c§lRed Flag";
+                        flagToWear = skarmiumItems.redFlag;
+                    } else if (isBlueFlag) {
+                        nameOfFlag = "§9§lBlue Flag";
+                        flagToWear = skarmiumItems.blueFlag;
+                    } else {
+                        // isGrayFlag
+                        nameOfFlag = "§7§lNeutral Flag";
+                        flagToWear = skarmiumItems.grayFlag;
+                    }
+
+                    // capture it
+                    event.getClickedBlock().setType(Material.AIR);
+                    player.getInventory().setHelmet(flagToWear);
+                    player.getServer().broadcastMessage("§e(!) " + player.getName() + " has captured the " + nameOfFlag +"§f§r!");
+                }
+            }
+
         }
     }
 

@@ -4,6 +4,7 @@
 #### Features
 * Welcome message when joining server.
 * Auto-"zzz" when sleeping.
+* Flags for blue and red team.
 
 #### Commands
 * heal
@@ -15,7 +16,7 @@
 * Flag Tool
 
 #### Item Rarity
-* Unranked (Gray)           ☆☆☆☆☆     §7
+* Unranked (gray)           ☆☆☆☆☆     §7
 * Common (white)            ★☆☆☆☆     §f
 * Uncommon (yellow)         ★★☆☆☆     §e
 * Rare (green)              ★★★☆☆     §a
