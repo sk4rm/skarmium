@@ -16,6 +16,11 @@ import java.util.Objects;
 
 public class skarmiumCommands implements CommandExecutor {
 
+    // chat prefixes
+    public static String prefix_diamond = "§9<♢> ";
+    public static String prefix_alert = "§e(!) ";
+    public static String prefix_error = "§c/△\\ ";
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         // check if is console (might remove or edit)
@@ -24,10 +29,6 @@ public class skarmiumCommands implements CommandExecutor {
             return true;
         }
         Player player = (Player) sender;
-        // prefixes for responses
-        String prefix_diamond = "§9<♢> ";
-        String prefix_alert = "§e(!) ";
-        String prefix_error = "§c/△\\ ";
 
 
         // heal

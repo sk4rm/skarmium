@@ -1,6 +1,7 @@
 package me.skarm.skarmium.events;
 
 import de.tr7zw.nbtapi.NBTTileEntity;
+import me.skarm.skarmium.commands.skarmiumCommands;
 import me.skarm.skarmium.items.skarmiumItems;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,6 +20,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class skarmiumEvents implements Listener {
 
@@ -48,6 +51,8 @@ public class skarmiumEvents implements Listener {
 
         return directions[index];
     }
+
+
 
     @EventHandler
     public static void onPlayerJoin (PlayerJoinEvent event) {
@@ -178,10 +183,37 @@ public class skarmiumEvents implements Listener {
                         flagToWear = skarmiumItems.grayFlag;
                     }
 
-                    // capture it
-                    event.getClickedBlock().setType(Material.AIR);
-                    player.getInventory().setHelmet(flagToWear);
-                    player.getServer().broadcastMessage("§e(!) " + player.getName() + " has captured the " + nameOfFlag +"§f§r!");
+                    // check if player is in a team and the team has a color (color always true)
+                    boolean isInTeam = player.getScoreboard().getEntryTeam(player.getName()) != null;
+                    if (isInTeam) {
+                        boolean teamIsRed = player.getScoreboard().getEntryTeam(player.getName()).getColor() == ChatColor.RED;
+                        boolean teamIsBlue = player.getScoreboard().getEntryTeam(player.getName()).getColor() == ChatColor.BLUE;
+                        // check if is either blue or red (and only these two colors)
+                        if (teamIsRed) {
+                            // check if flag is self or enemy
+                            if (isRedFlag) {
+                                // is self
+                                player.sendMessage(skarmiumCommands.prefix_alert + "You can't capture your own flag");
+                            } else {
+                                // enemy and neutral flag
+                                event.getClickedBlock().setType(Material.AIR);
+                                player.getInventory().setHelmet(flagToWear);
+                                // give glowing
+//                                PotionEffect glowing = new PotionEffect(PotionEffectType.GLOWING, 99999, 0, true, false);
+//                                player.addPotionEffect(glowing);
+                                player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §c" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has captured the " + nameOfFlag +"§r§e!");
+                            }
+
+                        } else if (teamIsBlue) {
+                            player.sendMessage("blue");
+                        } else {
+                            player.sendMessage(skarmiumCommands.prefix_error + "You are not in a red team or a blue team");
+                        }
+
+                    } else {
+                        player.sendMessage(skarmiumCommands.prefix_error + "You are not in a team");
+                    }
+
                 }
             }
 

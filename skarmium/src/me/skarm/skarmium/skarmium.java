@@ -4,8 +4,10 @@ import me.skarm.skarmium.commands.skarmiumAutocomplete;
 import me.skarm.skarmium.commands.skarmiumCommands;
 import me.skarm.skarmium.events.skarmiumEvents;
 import me.skarm.skarmium.items.skarmiumItems;
+import me.skarm.skarmium.tasks.giveGlow;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Objects;
 
@@ -28,6 +30,10 @@ public class skarmium extends JavaPlugin {
 
         // declare all items
         skarmiumItems.init();
+
+        // setup tasks
+        // task: give glow to flag bearers
+        BukkitTask giveGlowToFlagbearer = (BukkitTask) new giveGlow(this).runTaskTimer(this, 20L, 20L * 2);
 
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[skarmium] Plugin is enabled! :)");
     }
