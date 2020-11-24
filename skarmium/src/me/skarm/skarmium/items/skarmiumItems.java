@@ -65,6 +65,7 @@ public class skarmiumItems {
         lore.add("§fUse '/flag team <color>' to set the color");
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.addEnchant(Enchantment.VANISHING_CURSE, 1, false);
         item.setItemMeta(meta);
         flagtool = item;
     }
@@ -79,6 +80,7 @@ public class skarmiumItems {
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addEnchant(Enchantment.BINDING_CURSE, 1, false);
+        meta.addEnchant(Enchantment.VANISHING_CURSE, 1, false);
         item.setItemMeta(meta);
         grayFlag = item;
     }
@@ -93,6 +95,7 @@ public class skarmiumItems {
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addEnchant(Enchantment.BINDING_CURSE, 1, false);
+        meta.addEnchant(Enchantment.VANISHING_CURSE, 1, false);
         item.setItemMeta(meta);
         redFlag = item;
     }
@@ -107,6 +110,7 @@ public class skarmiumItems {
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         meta.addEnchant(Enchantment.BINDING_CURSE, 1, false);
+        meta.addEnchant(Enchantment.VANISHING_CURSE, 1, false);
         item.setItemMeta(meta);
         blueFlag = item;
     }

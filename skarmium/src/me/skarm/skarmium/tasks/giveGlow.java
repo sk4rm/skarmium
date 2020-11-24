@@ -35,8 +35,7 @@ public class giveGlow extends BukkitRunnable {
                 boolean isBearingRedFlag = player.getInventory().getHelmet().getItemMeta().equals(skarmiumItems.redFlag.getItemMeta());
                 boolean isBearingBlueFlag = player.getInventory().getHelmet().getItemMeta().equals(skarmiumItems.blueFlag.getItemMeta());
 
-                System.out.println(isBearingGrayFlag + " " + isBearingRedFlag + " " + isBearingBlueFlag);
-
+                // issue: timer on standby when checking inventory, glow only applies after exit inv after delay (if haven't alr)
 
                 if (isBearingGrayFlag || isBearingRedFlag || isBearingBlueFlag) {
                     // give glow

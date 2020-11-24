@@ -1,5 +1,5 @@
 name: skarmium
-version: 0.10.21
+version: 0.11.4
 author: skarm                     # [skarm, person1, person2]
 main: me.skarm.skarmium.skarmium
 api-version: 1.14                 # try 1.14 if something goes wrong
