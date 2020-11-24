@@ -99,7 +99,7 @@ public class skarmiumCommands implements CommandExecutor {
                         break;
 
                     // flag team
-                    case "team":
+                    case "team": case "set":
                         if (args.length == 1) {
                             // flag team
                             player.sendMessage(prefix_error + "Correct usage: /flag team <red/blue/gray>");

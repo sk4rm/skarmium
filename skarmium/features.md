@@ -9,7 +9,7 @@
 * Flag drops on death
 * Flag beacon (WIP)
 * Scoring system (WIP)
-* Respawn system (WIP)
+* Respawn system
 * Flag will replace helmet (therefore need to keep item)
 
 #### Commands

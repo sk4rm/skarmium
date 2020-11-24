@@ -20,6 +20,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 
 public class skarmiumEvents implements Listener {
@@ -202,6 +203,14 @@ public class skarmiumEvents implements Listener {
                             } else {
                                 // enemy and neutral flag
                                 event.getClickedBlock().setType(Material.AIR);
+
+                                // check if helmet slot has stuff
+                                if (player.getInventory().getHelmet() != null) {
+                                    // put somewhere else before switching with flag
+                                    ItemStack helmetItem = player.getInventory().getHelmet();
+                                    player.getInventory().addItem(helmetItem);
+                                }
+
                                 player.getInventory().setHelmet(flagToWear);
                                 // glowing is given to flag bearer via a task scheduler
                                 player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §c" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has captured the " + nameOfFlag +"§r§e!");
@@ -215,6 +224,14 @@ public class skarmiumEvents implements Listener {
                             } else {
                                 // enemy and neutral flag
                                 event.getClickedBlock().setType(Material.AIR);
+
+                                // check if helmet slot has stuff
+                                if (player.getInventory().getHelmet() != null) {
+                                    // put somewhere else before switching with flag
+                                    ItemStack helmetItem = player.getInventory().getHelmet();
+                                    player.getInventory().addItem(helmetItem);
+                                }
+
                                 player.getInventory().setHelmet(flagToWear);
                                 // glowing is given to flag bearer via a task scheduler
                                 player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §9" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has captured the " + nameOfFlag +"§r§e!");
@@ -386,6 +403,63 @@ public class skarmiumEvents implements Listener {
         }
 
 
+    }
+
+
+    // scoring system here we go
+    @EventHandler
+    public static void onTeamScore (PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        int x = player.getLocation().getBlockX();
+        int y = player.getLocation().getBlockY();
+        int z = player.getLocation().getBlockZ();
+        String teamName = player.getScoreboard().getEntryTeam(player.getName()).getDisplayName();
+        ChatColor teamColor = player.getScoreboard().getEntryTeam(player.getName()).getColor();
+
+        // check player team color
+        if (teamColor.equals(ChatColor.RED)) {
+            // is red
+            // now check if is at spawn
+            boolean isAtFlagSpawn = (x == redx) && (y == redy) && (z == redz);
+            if (isAtFlagSpawn) {
+                // check if player has anything in helmet slot, then check if player is bearing an enemy flag
+                if (player.getInventory().getHelmet() != null) {
+                    if (player.getInventory().getHelmet().getItemMeta().equals(skarmiumItems.blueFlag.getItemMeta())) {
+                        // score +1
+                        player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§c" + teamName + " §r§ehas scored a point!");
+                        // clear flag from self
+                        player.getInventory().setHelmet(null);
+                        // respawn enemy flag
+                        player.getWorld().getBlockAt(bluex, bluey, bluez).setType(Material.BLUE_BANNER);
+                        NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(bluex, bluey, bluez).getState());
+                        banner_nbt.setString("CustomName", "{\"text\":\"§9§lBlue Flag§f\"}");
+                        player.getWorld().getBlockAt(bluex, bluey, bluez).setBlockData(bluerot);
+                    }
+                }
+            }
+
+        } else if (teamColor.equals(ChatColor.BLUE)) {
+            // is blue
+            boolean isAtFlagSpawn = (x == bluex) && (y == bluey) && (z == bluez);
+            if (isAtFlagSpawn) {
+                // check if player has anything in helmet slot, then check if player is bearing an enemy flag
+                if (player.getInventory().getHelmet() != null) {
+                    if (player.getInventory().getHelmet().getItemMeta().equals(skarmiumItems.redFlag.getItemMeta())) {
+                        // score +1
+                        player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§9" + teamName + " §r§ehas scored a point!");
+                        // clear flag from self
+                        player.getInventory().setHelmet(null);
+                        // respawn enemy flag
+                        player.getWorld().getBlockAt(redx, redy, redz).setType(Material.RED_BANNER);
+                        NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(redx, redy, redz).getState());
+                        banner_nbt.setString("CustomName", "{\"text\":\"§c§lRed Flag§f\"}");
+                        player.getWorld().getBlockAt(redx, redy, redz).setBlockData(redrot);
+                    }
+                }
+            }
+        } else {
+            // this shouldn't have anything
+        }
     }
 
 }
