@@ -17,11 +17,10 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class skarmiumEvents implements Listener {
 
@@ -52,6 +51,12 @@ public class skarmiumEvents implements Listener {
         return directions[index];
     }
 
+
+    // flag spawnpoint coords and rotation
+    public static int redx, redy, redz;
+    public static int bluex, bluey, bluez;
+    public static Rotatable redrot, bluerot;
+    // neutral flags do not respawn
 
 
     @EventHandler
@@ -320,6 +325,66 @@ public class skarmiumEvents implements Listener {
             }
 
         }
+
+    }
+
+
+    // self team will tp the flag back to spawn when touched (not interact)
+    @EventHandler
+    public static void onSelfTeamReturnFlag (PlayerMoveEvent event) {
+        // check if is walking on the flag
+        Player player = event.getPlayer();
+        int x = player.getLocation().getBlockX();
+        int y = player.getLocation().getBlockY();
+        int z = player.getLocation().getBlockZ();
+        Block block = player.getWorld().getBlockAt(x,y,z);
+        NBTTileEntity block_nbt = new NBTTileEntity(block.getState());
+
+        boolean isRedFlag = block.getType().equals(Material.RED_BANNER) && block_nbt.getString("CustomName").equalsIgnoreCase("{\"text\":\"§c§lRed Flag§f\"}");
+        boolean isBlueFlag = block.getType().equals(Material.BLUE_BANNER) && block_nbt.getString("CustomName").equalsIgnoreCase("{\"text\":\"§9§lBlue Flag§f\"}");
+        if (isRedFlag) {
+            // red flag
+            // check if the player is red team
+            if (player.getScoreboard().getEntryTeam(player.getName()).getColor().equals(ChatColor.RED)) {
+                // check if already at spawn
+                boolean atRedx = player.getLocation().getBlockX() == redx;
+                boolean atRedy = player.getLocation().getBlockY() == redy;
+                boolean atRedz = player.getLocation().getBlockZ() == redz;
+                if (!(atRedx && atRedy && atRedz)) {
+                    // then tp it back if not
+                    block.setType(Material.AIR);
+                    player.getWorld().getBlockAt(redx, redy, redz).setType(Material.RED_BANNER);
+                    NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(redx, redy, redz).getState());
+                    player.getWorld().getBlockAt(redx, redy, redz).setBlockData(redrot);
+                    banner_nbt.setString("CustomName", "{\"text\":\"§c§lRed Flag§f\"}");
+                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§c§lRed Flag §r§ewas returned to its original location");
+                }
+
+            }
+
+        } else if (isBlueFlag) {
+            // blue flag
+            if (player.getScoreboard().getEntryTeam(player.getName()).getColor().equals(ChatColor.BLUE)) {
+                // check if already at spawn
+                boolean atBluex = player.getLocation().getBlockX() == bluex;
+                boolean atBluey = player.getLocation().getBlockY() == bluey;
+                boolean atBluez = player.getLocation().getBlockZ() == bluez;
+                if (!(atBluex && atBluey && atBluez)) {
+                    // then tp it back if not
+                    block.setType(Material.AIR);
+                    player.getWorld().getBlockAt(bluex, bluey, bluez).setType(Material.BLUE_BANNER);
+                    NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(bluex, bluey, bluez).getState());
+                    player.getWorld().getBlockAt(bluex, bluey, bluez).setBlockData(bluerot);
+                    banner_nbt.setString("CustomName", "{\"text\":\"§9§lBlue Flag§f\"}");
+                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§9§lBlue Flag §r§ewas returned to its original location");
+                }
+
+            }
+
+        } else {
+            // huh??
+        }
+
 
     }
 

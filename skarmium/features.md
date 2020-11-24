@@ -6,6 +6,8 @@
 * Auto-"zzz" when sleeping.
 * Flags for blue and red team.
 * Capture system
+* Flag drops on death
+* Flag beacon (WIP)
 * Scoring system (WIP)
 * Respawn system (WIP)
 * Flag will replace helmet (therefore need to keep item)

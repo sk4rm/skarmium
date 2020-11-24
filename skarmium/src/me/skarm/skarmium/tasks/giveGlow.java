@@ -1,9 +1,9 @@
 package me.skarm.skarmium.tasks;
 
+import me.skarm.skarmium.events.skarmiumEvents;
 import me.skarm.skarmium.items.skarmiumItems;
 import me.skarm.skarmium.skarmium;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -22,6 +22,7 @@ public class giveGlow extends BukkitRunnable {
 
     @Override
     public void run() {
+
         // list of all players
         List<Player> listOfPlayers = new ArrayList<>(Bukkit.getServer().getOnlinePlayers());
 

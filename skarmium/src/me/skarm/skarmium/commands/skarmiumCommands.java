@@ -123,6 +123,13 @@ public class skarmiumCommands implements CommandExecutor {
                                     flagRotation.setRotation(skarmiumEvents.yawToFace(bannerYaw));
                                     player.getWorld().getBlockAt(player.getLocation()).setBlockData(flagRotation);
                                     player.sendMessage(prefix_diamond + "Red team flag set");
+
+                                    // save coords to global variable in events
+                                    skarmiumEvents.redx = player.getLocation().getBlockX();
+                                    skarmiumEvents.redy = player.getLocation().getBlockY();
+                                    skarmiumEvents.redz = player.getLocation().getBlockZ();
+                                    skarmiumEvents.redrot = flagRotation;
+
                                 } else {
                                     player.sendMessage(prefix_error + "Make sure you're standing on a flag of a different team");
                                 }
@@ -137,6 +144,13 @@ public class skarmiumCommands implements CommandExecutor {
                                     flagRotation.setRotation(skarmiumEvents.yawToFace(bannerYaw));
                                     player.getWorld().getBlockAt(player.getLocation()).setBlockData(flagRotation);
                                     player.sendMessage(prefix_diamond + "Blue team flag set");
+
+                                    // save coords to global variable in events
+                                    skarmiumEvents.bluex = player.getLocation().getBlockX();
+                                    skarmiumEvents.bluey = player.getLocation().getBlockY();
+                                    skarmiumEvents.bluez = player.getLocation().getBlockZ();
+                                    skarmiumEvents.bluerot = flagRotation;
+
                                 } else {
                                     player.sendMessage(prefix_error + "Make sure you're standing on a flag of a different team");
                                 }
@@ -177,6 +191,23 @@ public class skarmiumCommands implements CommandExecutor {
                         if (isGrayFlag || isRedFlag || isBlueFlag) {
                             player.getWorld().getBlockAt(player.getLocation()).setType(Material.AIR);
                             player.sendMessage(prefix_diamond + "Flag removed");
+
+                            if (isBlueFlag) {
+                                // reset coords of blue
+                                skarmiumEvents.bluex = 0;
+                                skarmiumEvents.bluey = 0;
+                                skarmiumEvents.bluez = 0;
+
+                            } else if (isRedFlag) {
+                                // reset coords of red
+                                skarmiumEvents.redx = 0;
+                                skarmiumEvents.redy = 0;
+                                skarmiumEvents.redz = 0;
+
+                            } else {
+                                // reset nothing
+                            }
+
                         } else {
                             player.sendMessage(prefix_error + "There aren't any valid gray, blue, or red flags at your current location");
                         }
