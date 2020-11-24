@@ -151,7 +151,7 @@ public class skarmiumCommands implements CommandExecutor {
                                     player.getWorld().getBlockAt(player.getLocation()).setBlockData(flagRotation);
                                     player.sendMessage(prefix_diamond + "Flag set to neutral");
                                 } else {
-                                    player.sendMessage(prefix_error + "Make sure you're standing on a flag of a different team");
+                                    player.sendMessage(prefix_error + "Make sure you're standing on a valid flag of a different team");
                                 }
 
                             } else {
@@ -167,15 +167,17 @@ public class skarmiumCommands implements CommandExecutor {
 
                     // flag remove
                     case "remove":
+                        // check nbt tag for custom name
                         NBTTileEntity flagToRemove = new NBTTileEntity(player.getWorld().getBlockAt(player.getLocation()).getState());
-                        String nameOfFlag = flagToRemove.getString("CustomName");
-                        if (nameOfFlag.equalsIgnoreCase("{\"text\":\"§7§lNeutral Flag§f\"}") ||
-                            nameOfFlag.equalsIgnoreCase("{\"text\":\"§c§lRed Flag§f\"}") ||
-                            nameOfFlag.equalsIgnoreCase("{\"text\":\"§9§lBlue Flag§f\"}")) {
+                        // somehow the below boolean checks work and no null errors :)
+                        boolean isGrayFlag = player.getWorld().getBlockAt(player.getLocation()).getType() == Material.GRAY_BANNER && flagToRemove.getString("CustomName").equalsIgnoreCase("{\"text\":\"§7§lNeutral Flag§f\"}");
+                        boolean isRedFlag = player.getWorld().getBlockAt(player.getLocation()).getType() == Material.RED_BANNER && flagToRemove.getString("CustomName").equalsIgnoreCase("{\"text\":\"§c§lRed Flag§f\"}");
+                        boolean isBlueFlag = player.getWorld().getBlockAt(player.getLocation()).getType() == Material.BLUE_BANNER && flagToRemove.getString("CustomName").equalsIgnoreCase("{\"text\":\"§9§lBlue Flag§f\"}");
+                        if (isGrayFlag || isRedFlag || isBlueFlag) {
                             player.getWorld().getBlockAt(player.getLocation()).setType(Material.AIR);
                             player.sendMessage(prefix_diamond + "Flag removed");
                         } else {
-                            player.sendMessage(prefix_error + "There aren't any gray, blue, or red flags at your current location");
+                            player.sendMessage(prefix_error + "There aren't any valid gray, blue, or red flags at your current location");
                         }
                         break;
 
