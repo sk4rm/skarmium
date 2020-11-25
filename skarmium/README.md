@@ -15,8 +15,7 @@
 * the ability to wear a helmet when capturing a flag
 * flag drops upon breaking the block below the flag (please use `/flag remove` instead)
 * flag control (you won't know how many or where the flags are)
-* fun gameplay
-* no score limit (the game never ends)
+* a beacon beam showing you the flag location (it's client side D: )
 
 #
 

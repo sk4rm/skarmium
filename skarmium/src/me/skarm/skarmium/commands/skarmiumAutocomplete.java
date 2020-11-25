@@ -30,6 +30,7 @@ public class skarmiumAutocomplete implements TabCompleter {
                 possible_arguments.add("help");
                 possible_arguments.add("setup");
                 possible_arguments.add("reset");
+                possible_arguments.add("limit");
                 return possible_arguments;
             }
 

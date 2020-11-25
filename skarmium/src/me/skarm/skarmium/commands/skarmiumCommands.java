@@ -90,6 +90,27 @@ public class skarmiumCommands implements CommandExecutor {
                         player.sendMessage("help - show this help dialogue");
                         player.sendMessage("setup - quickly help you set up the scoreboard system for a capture the flag game");
                         player.sendMessage("reset - resets score for a new game");
+                        player.sendMessage("limit - sets the total points required to win (default is 3)");
+
+
+                        break;
+
+                    // score limit
+                    case "limit":
+                        // check if a number is given at the end
+                        if (args.length == 2) {
+                            // score limit <number>
+                            // check if is number
+                            try {
+                                skarmiumEvents.winning_score = Integer.parseInt(args[1]);
+                            } catch (IllegalArgumentException exception) {
+                                // is anything but an integer
+                                player.sendMessage(prefix_error + "Me not thinks " + args[1] + " is an number");
+                            }
+                        } else {
+                            // 'score limit' only
+                            player.sendMessage(prefix_error + "Correct usage: /score limit <number>");
+                        }
 
                         break;
 
