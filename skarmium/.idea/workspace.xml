@@ -25,17 +25,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1f28c905-5609-492d-9c95-4afc4bb3a57b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/features.md" beforeDir="false" afterPath="$PROJECT_DIR$/features.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/skarmium/me/skarm/skarmium/commands/skarmiumAutocomplete.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/skarmium/me/skarm/skarmium/commands/skarmiumAutocomplete.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/skarmium/me/skarm/skarmium/commands/skarmiumCommands.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/skarmium/me/skarm/skarmium/commands/skarmiumCommands.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/skarmium/me/skarm/skarmium/events/skarmiumEvents.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/skarmium/me/skarm/skarmium/events/skarmiumEvents.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/skarmium/me/skarm/skarmium/skarmium.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/skarmium/me/skarm/skarmium/skarmium.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/skarmium/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/skarmium/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/me/skarm/skarmium/commands/skarmiumAutocomplete.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/me/skarm/skarmium/commands/skarmiumAutocomplete.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/me/skarm/skarmium/commands/skarmiumCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/me/skarm/skarmium/commands/skarmiumCommands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/me/skarm/skarmium/events/skarmiumEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/me/skarm/skarmium/events/skarmiumEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/me/skarm/skarmium/skarmium.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/me/skarm/skarmium/skarmium.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

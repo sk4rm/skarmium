@@ -15,16 +15,16 @@
 #### Commands
 * heal
 * feed
-* bigsummon
-* flag remove/team/help/tool
-* score
+* bigsummon (from tutorial :P)
+* flag help/tool/team/remove
+* score help/reset/setup
 
 #### Items
-* Silver Stake
+* Silver Stake (from tutorial :P)
 * Flag Tool
 * Three wearable flags (through plugin only)
 
-#### Item Rarity
+#### Item Rarity (Currently useless)
 * Unranked (gray)           ☆☆☆☆☆     §7
 * Common (white)            ★☆☆☆☆     §f
 * Uncommon (yellow)         ★★☆☆☆     §e
