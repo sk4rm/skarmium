@@ -21,11 +21,11 @@ public class skarmium extends JavaPlugin {
         // declare commands
         skarmiumCommands cmds = new skarmiumCommands();
         // list of all plugin commands
-        String[] listofcmds = {"heal", "feed", "bigsummon", "flag"};
+        String[] listofcmds = {"heal", "feed", "bigsummon", "flag", "score"};
         // set command handlers (executors) for each and every command
         for (String cmd : listofcmds) {
             Objects.requireNonNull(getCommand(cmd)).setExecutor(cmds);
-            Objects.requireNonNull(getCommand("flag")).setTabCompleter(new skarmiumAutocomplete());
+            Objects.requireNonNull(getCommand(cmd)).setTabCompleter(new skarmiumAutocomplete());
         }
 
         // declare all items

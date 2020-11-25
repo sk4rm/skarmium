@@ -3,6 +3,7 @@ package me.skarm.skarmium.commands;
 import de.tr7zw.nbtapi.NBTTileEntity;
 import me.skarm.skarmium.events.skarmiumEvents;
 import me.skarm.skarmium.items.skarmiumItems;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.data.Rotatable;
@@ -11,6 +12,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
 
 import java.util.Objects;
 
@@ -74,6 +76,81 @@ public class skarmiumCommands implements CommandExecutor {
             }
         }
 
+        // score
+        else if (cmd.getName().equalsIgnoreCase("score")) {
+            if (args.length == 0) {
+                // just /score without any arguments
+                player.sendMessage(prefix_error + "Correct usage: /score <subcommand> <parameters>");
+                player.sendMessage(prefix_alert + "Type '/score help' for a list of subcommands");
+            } else {
+                switch (args[0]) {
+                    // score help
+                    case "help":
+                        player.sendMessage(prefix_diamond + "List of subcommands include:");
+                        player.sendMessage("help - show this help dialogue");
+                        player.sendMessage("setup - quickly help you set up the scoreboard system for a capture the flag game");
+                        player.sendMessage("reset - resets score for a new game");
+
+                        break;
+
+                    // score reset
+                    case "reset":
+                        // check if scoreboard exists
+                        if (player.getScoreboard().getObjective("skarmiumScores") == null) {
+                            player.sendMessage(prefix_error + "You have not yet set up a scoreboard");
+                            player.sendMessage(prefix_alert + "Use '/score setup' to setup everything quickly");
+                        } else {
+                            // it exists
+                            // reset scores
+                            skarmiumEvents.redscore = 0;
+                            skarmiumEvents.bluescore = 0;
+                            player.getScoreboard().getObjective("skarmiumScores").getScore("§c§lRed Team").setScore(skarmiumEvents.redscore);
+                            player.getScoreboard().getObjective("skarmiumScores").getScore("§9§lBlue Team").setScore(skarmiumEvents.bluescore);
+
+                            player.getServer().broadcastMessage(prefix_alert + "Flag scores have been reset");
+                        }
+                        break;
+
+                    // score setup
+                    case "setup":
+                        // setup teams and settings if doesn't exist
+                        if (player.getScoreboard().getTeam("skarmiumRedTeam") == null) {
+                            player.getScoreboard().registerNewTeam("skarmiumRedTeam");
+                            player.getScoreboard().getTeam("skarmiumRedTeam").setDisplayName(ChatColor.RED + "Red Team");
+                            player.getScoreboard().getTeam("skarmiumRedTeam").setColor(ChatColor.RED);
+                            player.getScoreboard().getTeam("skarmiumRedTeam").setAllowFriendlyFire(false);
+                            player.getScoreboard().getTeam("skarmiumRedTeam").setCanSeeFriendlyInvisibles(true);
+                            player.getScoreboard().getTeam("skarmiumRedTeam").setPrefix(ChatColor.RED + "<Red> ");
+                        }
+                        if (player.getScoreboard().getTeam("skarmiumBlueTeam") == null) {
+                            player.getScoreboard().registerNewTeam("skarmiumBlueTeam");
+                            player.getScoreboard().getTeam("skarmiumBlueTeam").setDisplayName(ChatColor.BLUE + "Blue Team");
+                            player.getScoreboard().getTeam("skarmiumBlueTeam").setColor(ChatColor.BLUE);
+                            player.getScoreboard().getTeam("skarmiumBlueTeam").setColor(ChatColor.BLUE);
+                            player.getScoreboard().getTeam("skarmiumBlueTeam").setAllowFriendlyFire(false);
+                            player.getScoreboard().getTeam("skarmiumBlueTeam").setCanSeeFriendlyInvisibles(true);
+                            player.getScoreboard().getTeam("skarmiumBlueTeam").setPrefix(ChatColor.BLUE + "[Blue] ");
+                        }
+
+                        // setup objective and settings if doesn't exist
+                        if (player.getScoreboard().getObjective("skarmiumScores") == null) {
+                            player.getScoreboard().registerNewObjective("skarmiumScores", "dummy","Flag Scores");
+                            player.getScoreboard().getObjective("skarmiumScores").setDisplaySlot(DisplaySlot.SIDEBAR);
+                        }
+
+                        player.sendMessage(prefix_diamond + "Scoreboards and teams have been set up");
+                        break;
+
+
+                    // score alegifjewil
+                    default:
+                        player.sendMessage(prefix_error + "No such subcommand " + args[0]);
+                        break;
+                }
+            }
+        }
+
+
         // flag
         else if (cmd.getName().equalsIgnoreCase("flag")) {
             if (args.length == 0) {
@@ -88,7 +165,7 @@ public class skarmiumCommands implements CommandExecutor {
                         player.sendMessage(prefix_diamond + "List of subcommands include:");
                         player.sendMessage("help - show this help dialogue");
                         player.sendMessage("tool - gives a player a flag tool");
-                        player.sendMessage("set - settings for a flag");
+                        player.sendMessage("team - set the color for a flag");
                         player.sendMessage("remove - for removing any unbreakable gray, blue, and red flag you are standing on");
                         break;
 

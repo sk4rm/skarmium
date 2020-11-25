@@ -21,12 +21,13 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scoreboard.Scoreboard;
 
 
 public class skarmiumEvents implements Listener {
 
     // custom function for converting yaw to a BlockFace direction
-    public static BlockFace yawToFace (float yawDegree) {
+    public static BlockFace yawToFace(float yawDegree) {
         BlockFace[] directions = {
                 BlockFace.NORTH,
                 BlockFace.NORTH_NORTH_EAST,
@@ -59,13 +60,17 @@ public class skarmiumEvents implements Listener {
     public static Rotatable redrot, bluerot;
     // neutral flags do not respawn
 
+    // scores
+    public static int redscore = 0;
+    public static int bluescore = 0;
+
 
     @EventHandler
-    public static void onPlayerJoin (PlayerJoinEvent event) {
+    public static void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         player.sendMessage(ChatColor.LIGHT_PURPLE + "Welcome to the server!");
     }
-    
+
 //    @EventHandler
 //    public static void onPlayerWalkOnStone (PlayerMoveEvent event) {
 //        Player player = event.getPlayer();
@@ -81,17 +86,17 @@ public class skarmiumEvents implements Listener {
 
     // auto zzz
     @EventHandler
-    public static void onPlayerSleep (PlayerBedEnterEvent event) {
+    public static void onPlayerSleep(PlayerBedEnterEvent event) {
         Player player = event.getPlayer();
 
-        if (event.getBedEnterResult() == PlayerBedEnterEvent.BedEnterResult.OK){
+        if (event.getBedEnterResult() == PlayerBedEnterEvent.BedEnterResult.OK) {
             player.chat("zzz");
         }
     }
 
     // place flag with flag tool
     @EventHandler
-    public static void onPlayerRightClick (PlayerInteractEvent event) {
+    public static void onPlayerRightClick(PlayerInteractEvent event) {
         // check for right click action and make sure it only triggers once
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getHand() == EquipmentSlot.HAND) {
             // check if null
@@ -109,11 +114,11 @@ public class skarmiumEvents implements Listener {
 
                     // check if attempting to place flag on a gray banner
                     if (block.getType() == Material.GRAY_BANNER || block_above.getType() == Material.GRAY_BANNER ||
-                        block.getType() == Material.BLUE_BANNER || block_above.getType() == Material.BLUE_BANNER ||
-                        block.getType() == Material.RED_BANNER || block_above.getType() == Material.RED_BANNER) {
+                            block.getType() == Material.BLUE_BANNER || block_above.getType() == Material.BLUE_BANNER ||
+                            block.getType() == Material.RED_BANNER || block_above.getType() == Material.RED_BANNER) {
                         player.sendMessage("§e(!) You can't place a flag there anymore");
 
-                    // check if two blocks above the clicked block is empty so to to place a banner
+                        // check if two blocks above the clicked block is empty so to to place a banner
                     } else if (block_above.getType() == Material.AIR && block_above_above.getType() == Material.AIR) {
                         // block_above is also the block position where the flag stands
                         block_above.setType(Material.GRAY_BANNER);
@@ -128,7 +133,7 @@ public class skarmiumEvents implements Listener {
 
                         // set name to banner for future uses in code
                         NBTTileEntity banner_nbt = new NBTTileEntity(block_above.getState());
-                        banner_nbt.setString("CustomName","{\"text\":\"§7§lNeutral Flag§f\"}");
+                        banner_nbt.setString("CustomName", "{\"text\":\"§7§lNeutral Flag§f\"}");
 
                         player.sendMessage("§9<♢> A flag has been placed at your specified location");
 
@@ -143,7 +148,7 @@ public class skarmiumEvents implements Listener {
 
     // stop flag breaking
     @EventHandler
-    public static void onFlagBreakAttempt (BlockBreakEvent event) {
+    public static void onFlagBreakAttempt(BlockBreakEvent event) {
         Player player = event.getPlayer();
         NBTTileEntity block_nbt = new NBTTileEntity(event.getBlock().getState());
         boolean isGrayFlag = event.getBlock().getType() == Material.GRAY_BANNER && block_nbt.getString("CustomName").equalsIgnoreCase("{\"text\":\"§7§lNeutral Flag§f\"}");
@@ -159,7 +164,7 @@ public class skarmiumEvents implements Listener {
 
     // flag capture woooooo!
     @EventHandler
-    public static void onFlagCaptureAttempt (PlayerInteractEvent event) {
+    public static void onFlagCaptureAttempt(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getHand() == EquipmentSlot.HAND) {
             // is right click block
             // run whenever "is bare hand" or "is NOT holding flag tool"
@@ -213,7 +218,7 @@ public class skarmiumEvents implements Listener {
 
                                 player.getInventory().setHelmet(flagToWear);
                                 // glowing is given to flag bearer via a task scheduler
-                                player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §c" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has captured the " + nameOfFlag +"§r§e!");
+                                player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §c" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has captured the " + nameOfFlag + "§r§e!");
                             }
 
                         } else if (teamIsBlue) {
@@ -234,7 +239,7 @@ public class skarmiumEvents implements Listener {
 
                                 player.getInventory().setHelmet(flagToWear);
                                 // glowing is given to flag bearer via a task scheduler
-                                player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §9" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has captured the " + nameOfFlag +"§r§e!");
+                                player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §9" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has captured the " + nameOfFlag + "§r§e!");
                             }
                         } else {
                             player.sendMessage(skarmiumCommands.prefix_error + "You are not in a red team or a blue team");
@@ -252,7 +257,7 @@ public class skarmiumEvents implements Listener {
 
     // player dies and drops flag
     @EventHandler
-    public static void onPlayerDeathDropFlag (PlayerDeathEvent event) {
+    public static void onPlayerDeathDropFlag(PlayerDeathEvent event) {
         Player player = event.getEntity();
         int x = player.getLocation().getBlockX();
         int y = player.getLocation().getBlockY();
@@ -267,74 +272,74 @@ public class skarmiumEvents implements Listener {
 
             if (isGrayFlag) {
                 // neutral flag
-                player.getWorld().getBlockAt(x,y,z).setType(Material.GRAY_BANNER);
-                NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(x,y,z).getState());
+                player.getWorld().getBlockAt(x, y, z).setType(Material.GRAY_BANNER);
+                NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(x, y, z).getState());
                 Rotatable flagRotation = (Rotatable) player.getWorld().getBlockAt(player.getLocation()).getBlockData();
                 float bannerYaw = (player.getLocation().getYaw()) % 360.0f;
                 flagRotation.setRotation(yawToFace(bannerYaw));
                 player.getWorld().getBlockAt(player.getLocation()).setBlockData(flagRotation);
-                banner_nbt.setString("CustomName","{\"text\":\"§7§lNeutral Flag§f\"}");
+                banner_nbt.setString("CustomName", "{\"text\":\"§7§lNeutral Flag§f\"}");
 
                 String nameOfGray = "§7§lNeutral Flag";
 
                 // check team to broadcast message
                 if (player.getScoreboard().getEntryTeam(player.getName()).getColor().equals(ChatColor.BLUE)) {
                     // broadcast blue team message
-                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §9" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfGray +"§r§e!");
+                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §9" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfGray + "§r§e!");
                 } else if (player.getScoreboard().getEntryTeam(player.getName()).getColor().equals(ChatColor.RED)) {
                     // broadcast red team message
-                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §c" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfGray +"§r§e!");
+                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §c" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfGray + "§r§e!");
                 } else {
                     // some random dude dropped the flag
-                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §9" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfGray +"§r§e!");
+                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §9" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfGray + "§r§e!");
                 }
 
             } else if (isRedFlag) {
                 // red flag
-                player.getWorld().getBlockAt(x,y,z).setType(Material.RED_BANNER);
-                NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(x,y,z).getState());
+                player.getWorld().getBlockAt(x, y, z).setType(Material.RED_BANNER);
+                NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(x, y, z).getState());
                 Rotatable flagRotation = (Rotatable) player.getWorld().getBlockAt(player.getLocation()).getBlockData();
                 float bannerYaw = (player.getLocation().getYaw()) % 360.0f;
                 flagRotation.setRotation(yawToFace(bannerYaw));
                 player.getWorld().getBlockAt(player.getLocation()).setBlockData(flagRotation);
-                banner_nbt.setString("CustomName","{\"text\":\"§c§lRed Flag§f\"}");
+                banner_nbt.setString("CustomName", "{\"text\":\"§c§lRed Flag§f\"}");
 
                 String nameOfRed = "§c§lRed Flag";
 
                 // check team to broadcast message
                 if (player.getScoreboard().getEntryTeam(player.getName()).getColor().equals(ChatColor.BLUE)) {
                     // broadcast blue team message
-                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §9" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfRed +"§r§e!");
+                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §9" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfRed + "§r§e!");
                 } else if (player.getScoreboard().getEntryTeam(player.getName()).getColor().equals(ChatColor.RED)) {
                     // broadcast red team message
-                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §c" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfRed +"§r§e!");
+                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §c" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfRed + "§r§e!");
                 } else {
                     // some random dude dropped the flag
-                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §9" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfRed +"§r§e!");
+                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §9" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfRed + "§r§e!");
                 }
 
             } else if (isBlueFlag) {
                 // blue flag
-                player.getWorld().getBlockAt(x,y,z).setType(Material.BLUE_BANNER);
-                NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(x,y,z).getState());
+                player.getWorld().getBlockAt(x, y, z).setType(Material.BLUE_BANNER);
+                NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(x, y, z).getState());
                 Rotatable flagRotation = (Rotatable) player.getWorld().getBlockAt(player.getLocation()).getBlockData();
                 float bannerYaw = (player.getLocation().getYaw()) % 360.0f;
                 flagRotation.setRotation(yawToFace(bannerYaw));
                 player.getWorld().getBlockAt(player.getLocation()).setBlockData(flagRotation);
-                banner_nbt.setString("CustomName","{\"text\":\"§9§lBlue Flag§f\"}");
+                banner_nbt.setString("CustomName", "{\"text\":\"§9§lBlue Flag§f\"}");
 
                 String nameOfBlue = "§9§lBlue Flag";
 
                 // check team to broadcast message
                 if (player.getScoreboard().getEntryTeam(player.getName()).getColor().equals(ChatColor.BLUE)) {
                     // broadcast blue team message
-                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §9" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfBlue +"§r§e!");
+                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §9" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfBlue + "§r§e!");
                 } else if (player.getScoreboard().getEntryTeam(player.getName()).getColor().equals(ChatColor.RED)) {
                     // broadcast red team message
-                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §c" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfBlue +"§r§e!");
+                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §c" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfBlue + "§r§e!");
                 } else {
                     // some random dude dropped the flag
-                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §9" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfBlue +"§r§e!");
+                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + player.getName() + " from §9" + player.getScoreboard().getEntryTeam(player.getName()).getDisplayName() + "§e has dropped the " + nameOfBlue + "§r§e!");
                 }
 
             } else {
@@ -348,117 +353,145 @@ public class skarmiumEvents implements Listener {
 
     // self team will tp the flag back to spawn when touched (not interact)
     @EventHandler
-    public static void onSelfTeamReturnFlag (PlayerMoveEvent event) {
-        // check if is walking on the flag
-        Player player = event.getPlayer();
-        int x = player.getLocation().getBlockX();
-        int y = player.getLocation().getBlockY();
-        int z = player.getLocation().getBlockZ();
-        Block block = player.getWorld().getBlockAt(x,y,z);
-        NBTTileEntity block_nbt = new NBTTileEntity(block.getState());
+    public static void onSelfTeamReturnFlag(PlayerMoveEvent event) {
+        // check if player has team
+        if (event.getPlayer().getScoreboard().getEntryTeam(event.getPlayer().getName()) != null) {
 
-        boolean isRedFlag = block.getType().equals(Material.RED_BANNER) && block_nbt.getString("CustomName").equalsIgnoreCase("{\"text\":\"§c§lRed Flag§f\"}");
-        boolean isBlueFlag = block.getType().equals(Material.BLUE_BANNER) && block_nbt.getString("CustomName").equalsIgnoreCase("{\"text\":\"§9§lBlue Flag§f\"}");
-        if (isRedFlag) {
-            // red flag
-            // check if the player is red team
-            if (player.getScoreboard().getEntryTeam(player.getName()).getColor().equals(ChatColor.RED)) {
-                // check if already at spawn
-                boolean atRedx = player.getLocation().getBlockX() == redx;
-                boolean atRedy = player.getLocation().getBlockY() == redy;
-                boolean atRedz = player.getLocation().getBlockZ() == redz;
-                if (!(atRedx && atRedy && atRedz)) {
-                    // then tp it back if not
-                    block.setType(Material.AIR);
-                    player.getWorld().getBlockAt(redx, redy, redz).setType(Material.RED_BANNER);
-                    NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(redx, redy, redz).getState());
-                    player.getWorld().getBlockAt(redx, redy, redz).setBlockData(redrot);
-                    banner_nbt.setString("CustomName", "{\"text\":\"§c§lRed Flag§f\"}");
-                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§c§lRed Flag §r§ewas returned to its original location");
+            // check if is walking on the flag
+            Player player = event.getPlayer();
+            int x = player.getLocation().getBlockX();
+            int y = player.getLocation().getBlockY();
+            int z = player.getLocation().getBlockZ();
+            Block block = player.getWorld().getBlockAt(x, y, z);
+            NBTTileEntity block_nbt = new NBTTileEntity(block.getState());
+
+            boolean isRedFlag = block.getType().equals(Material.RED_BANNER) && block_nbt.getString("CustomName").equalsIgnoreCase("{\"text\":\"§c§lRed Flag§f\"}");
+            boolean isBlueFlag = block.getType().equals(Material.BLUE_BANNER) && block_nbt.getString("CustomName").equalsIgnoreCase("{\"text\":\"§9§lBlue Flag§f\"}");
+            if (isRedFlag) {
+                // red flag
+                // check if the player is red team
+                if (player.getScoreboard().getEntryTeam(player.getName()).getColor().equals(ChatColor.RED)) {
+                    // check if already at spawn
+                    boolean atRedx = player.getLocation().getBlockX() == redx;
+                    boolean atRedy = player.getLocation().getBlockY() == redy;
+                    boolean atRedz = player.getLocation().getBlockZ() == redz;
+                    if (!(atRedx && atRedy && atRedz)) {
+                        // then tp it back if not
+                        block.setType(Material.AIR);
+                        player.getWorld().getBlockAt(redx, redy, redz).setType(Material.RED_BANNER);
+                        NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(redx, redy, redz).getState());
+                        player.getWorld().getBlockAt(redx, redy, redz).setBlockData(redrot);
+                        banner_nbt.setString("CustomName", "{\"text\":\"§c§lRed Flag§f\"}");
+                        player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§c§lRed Flag §r§ewas returned to its original location");
+                    }
+
                 }
 
-            }
+            } else if (isBlueFlag) {
+                // blue flag
+                if (player.getScoreboard().getEntryTeam(player.getName()).getColor().equals(ChatColor.BLUE)) {
+                    // check if already at spawn
+                    boolean atBluex = player.getLocation().getBlockX() == bluex;
+                    boolean atBluey = player.getLocation().getBlockY() == bluey;
+                    boolean atBluez = player.getLocation().getBlockZ() == bluez;
+                    if (!(atBluex && atBluey && atBluez)) {
+                        // then tp it back if not
+                        block.setType(Material.AIR);
+                        player.getWorld().getBlockAt(bluex, bluey, bluez).setType(Material.BLUE_BANNER);
+                        NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(bluex, bluey, bluez).getState());
+                        player.getWorld().getBlockAt(bluex, bluey, bluez).setBlockData(bluerot);
+                        banner_nbt.setString("CustomName", "{\"text\":\"§9§lBlue Flag§f\"}");
+                        player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§9§lBlue Flag §r§ewas returned to its original location");
+                    }
 
-        } else if (isBlueFlag) {
-            // blue flag
-            if (player.getScoreboard().getEntryTeam(player.getName()).getColor().equals(ChatColor.BLUE)) {
-                // check if already at spawn
-                boolean atBluex = player.getLocation().getBlockX() == bluex;
-                boolean atBluey = player.getLocation().getBlockY() == bluey;
-                boolean atBluez = player.getLocation().getBlockZ() == bluez;
-                if (!(atBluex && atBluey && atBluez)) {
-                    // then tp it back if not
-                    block.setType(Material.AIR);
-                    player.getWorld().getBlockAt(bluex, bluey, bluez).setType(Material.BLUE_BANNER);
-                    NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(bluex, bluey, bluez).getState());
-                    player.getWorld().getBlockAt(bluex, bluey, bluez).setBlockData(bluerot);
-                    banner_nbt.setString("CustomName", "{\"text\":\"§9§lBlue Flag§f\"}");
-                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§9§lBlue Flag §r§ewas returned to its original location");
                 }
 
+            } else {
+                // huh??
             }
 
-        } else {
-            // huh??
         }
-
 
     }
 
 
     // scoring system here we go
     @EventHandler
-    public static void onTeamScore (PlayerMoveEvent event) {
+    public static void onTeamScore(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         int x = player.getLocation().getBlockX();
         int y = player.getLocation().getBlockY();
         int z = player.getLocation().getBlockZ();
-        String teamName = player.getScoreboard().getEntryTeam(player.getName()).getDisplayName();
-        ChatColor teamColor = player.getScoreboard().getEntryTeam(player.getName()).getColor();
 
-        // check player team color
-        if (teamColor.equals(ChatColor.RED)) {
-            // is red
-            // now check if is at spawn
-            boolean isAtFlagSpawn = (x == redx) && (y == redy) && (z == redz);
-            if (isAtFlagSpawn) {
-                // check if player has anything in helmet slot, then check if player is bearing an enemy flag
-                if (player.getInventory().getHelmet() != null) {
-                    if (player.getInventory().getHelmet().getItemMeta().equals(skarmiumItems.blueFlag.getItemMeta())) {
-                        // score +1
-                        player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§c" + teamName + " §r§ehas scored a point!");
-                        // clear flag from self
-                        player.getInventory().setHelmet(null);
-                        // respawn enemy flag
-                        player.getWorld().getBlockAt(bluex, bluey, bluez).setType(Material.BLUE_BANNER);
-                        NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(bluex, bluey, bluez).getState());
-                        banner_nbt.setString("CustomName", "{\"text\":\"§9§lBlue Flag§f\"}");
-                        player.getWorld().getBlockAt(bluex, bluey, bluez).setBlockData(bluerot);
+        // check if player has team, if not error
+        if (player.getScoreboard().getEntryTeam(player.getName()) != null) {
+
+            String teamName = player.getScoreboard().getEntryTeam(player.getName()).getDisplayName();
+            ChatColor teamColor = player.getScoreboard().getEntryTeam(player.getName()).getColor();
+
+            // check player team color
+            if (teamColor.equals(ChatColor.RED)) {
+                // is red
+                // now check if is at spawn
+                boolean isAtFlagSpawn = (x == redx) && (y == redy) && (z == redz);
+                if (isAtFlagSpawn) {
+                    // check if player has anything in helmet slot, then check if player is bearing an enemy flag
+                    if (player.getInventory().getHelmet() != null) {
+                        if (player.getInventory().getHelmet().getItemMeta().equals(skarmiumItems.blueFlag.getItemMeta())) {
+                            // check if scoreboard is set
+                            if (player.getScoreboard().getObjective("skarmiumScores") != null) {
+                                // score +1
+                                redscore++;
+                                player.getScoreboard().getObjective("skarmiumScores").getScore("§c§lRed Team").setScore(redscore);
+                                player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§c" + teamName + " §r§ehas scored a point!");
+                            } else {
+                                player.sendMessage(skarmiumCommands.prefix_error + "You can't score because a scoreboard is not yet setup");
+                            }
+                            // clear flag from self
+                            player.getInventory().setHelmet(null);
+                            // respawn enemy flag
+                            player.getWorld().getBlockAt(bluex, bluey, bluez).setType(Material.BLUE_BANNER);
+                            NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(bluex, bluey, bluez).getState());
+                            banner_nbt.setString("CustomName", "{\"text\":\"§9§lBlue Flag§f\"}");
+                            player.getWorld().getBlockAt(bluex, bluey, bluez).setBlockData(bluerot);
+                        }
                     }
                 }
-            }
 
-        } else if (teamColor.equals(ChatColor.BLUE)) {
-            // is blue
-            boolean isAtFlagSpawn = (x == bluex) && (y == bluey) && (z == bluez);
-            if (isAtFlagSpawn) {
-                // check if player has anything in helmet slot, then check if player is bearing an enemy flag
-                if (player.getInventory().getHelmet() != null) {
-                    if (player.getInventory().getHelmet().getItemMeta().equals(skarmiumItems.redFlag.getItemMeta())) {
-                        // score +1
-                        player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§9" + teamName + " §r§ehas scored a point!");
-                        // clear flag from self
-                        player.getInventory().setHelmet(null);
-                        // respawn enemy flag
-                        player.getWorld().getBlockAt(redx, redy, redz).setType(Material.RED_BANNER);
-                        NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(redx, redy, redz).getState());
-                        banner_nbt.setString("CustomName", "{\"text\":\"§c§lRed Flag§f\"}");
-                        player.getWorld().getBlockAt(redx, redy, redz).setBlockData(redrot);
+            } else if (teamColor.equals(ChatColor.BLUE)) {
+                // is blue
+                boolean isAtFlagSpawn = (x == bluex) && (y == bluey) && (z == bluez);
+                if (isAtFlagSpawn) {
+                    // check if player has anything in helmet slot, then check if player is bearing an enemy flag
+                    if (player.getInventory().getHelmet() != null) {
+                        if (player.getInventory().getHelmet().getItemMeta().equals(skarmiumItems.redFlag.getItemMeta())) {
+                            // check if scoreboard is set
+                            if (player.getScoreboard().getObjective("skarmiumScores") != null) {
+                                // score +1
+                                bluescore++;
+                                player.getScoreboard().getObjective("skarmiumScores").getScore("§9§lBlue Team").setScore(bluescore);
+                                player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§9" + teamName + " §r§ehas scored a point!");
+                            } else {
+                                player.sendMessage(skarmiumCommands.prefix_error + "You can't score because a scoreboard is not yet set up");
+                            }
+                            // clear flag from self
+                            player.getInventory().setHelmet(null);
+                            // respawn enemy flag
+                            player.getWorld().getBlockAt(redx, redy, redz).setType(Material.RED_BANNER);
+                            NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(redx, redy, redz).getState());
+                            banner_nbt.setString("CustomName", "{\"text\":\"§c§lRed Flag§f\"}");
+                            player.getWorld().getBlockAt(redx, redy, redz).setBlockData(redrot);
+                        }
                     }
                 }
+            } else {
+                // this shouldn't have anything
             }
+
         } else {
-            // this shouldn't have anything
+            // means player has no team
+            // player.sendMessage(skarmiumCommands.prefix_error + "You are currently not in a red or blue team");
+            // meh. will spam.
         }
     }
 

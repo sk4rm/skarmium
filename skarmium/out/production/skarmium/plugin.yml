@@ -1,5 +1,5 @@
 name: skarmium
-version: 0.13.14
+version: 0.13.37
 author: skarm                     # [skarm, person1, person2]
 main: me.skarm.skarmium.skarmium
 api-version: 1.14                 # try 1.14 if something goes wrong
@@ -29,6 +29,11 @@ commands:
     usage: /<command> <subcommand> <parameters>
     permission: skarmium.flag.*
     permission-message: You are not permitted to execute that command
+  score:
+    description: Contains subcommand related to flag scores
+    usage: /<command> <subcommand> <parameters>
+    permissions: skarmium.score.*
+    permission-message: You are not permitted to execute that command
 
 permissions:
   skarmium.*:
@@ -50,5 +55,8 @@ permissions:
     default: op
   skarmium.bigsummon:
     description: Allows you to summon a specified number of entities of the same type at your current location
+    default: op
+  skarmium.score:
+    description: Allows you to access and modify flag scores
     default: op
 

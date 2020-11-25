@@ -17,6 +17,7 @@
 * feed
 * bigsummon
 * flag remove/team/help/tool
+* score
 
 #### Items
 * Silver Stake
