@@ -25,9 +25,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1f28c905-5609-492d-9c95-4afc4bb3a57b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/features.md" beforeDir="false" afterPath="$PROJECT_DIR$/features.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/skarmium/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/skarmium/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/me/skarm/skarmium/events/skarmiumEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/me/skarm/skarmium/events/skarmiumEvents.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

@@ -38,4 +38,4 @@ After this, the game can be started. Here are some notes:
 * You can score a point by capturing it and walking over your flag.
 * When you kill a enemy player capturing your flag, the flag will be placed on his death location.
 * Walk over the dropped flag to teleport it back to initial location.
-~~* You can only score when your flag is present at its initial location. ~~
+* You can only score when your flag is present at its initial location.

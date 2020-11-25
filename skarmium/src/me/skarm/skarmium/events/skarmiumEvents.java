@@ -3,8 +3,10 @@ package me.skarm.skarmium.events;
 import de.tr7zw.nbtapi.NBTTileEntity;
 import me.skarm.skarmium.commands.skarmiumCommands;
 import me.skarm.skarmium.items.skarmiumItems;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Rotatable;
@@ -20,8 +22,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scoreboard.Scoreboard;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class skarmiumEvents implements Listener {
@@ -53,6 +56,24 @@ public class skarmiumEvents implements Listener {
         return directions[index];
     }
 
+    // custom function to display win
+    public static void displayWinTitle(String team) {
+        List<Player> players = new ArrayList<>(Bukkit.getServer().getOnlinePlayers());
+
+        // check which won
+        if (team.equalsIgnoreCase("red")) {
+            // red won
+            for (int i = 0; i < players.size(); i++) {
+                players.get(i).sendTitle("§c§lRed Team Won!", "GG", 1, 20 * 5, 1);
+            }
+        } else if (team.equalsIgnoreCase("blue")) {
+            // blue won
+            for (int i = 0; i < players.size(); i++) {
+                players.get(i).sendTitle("§9§lBlue Team Won!", "GG", 1, 20 * 5, 1);
+            }
+        }
+    }
+
 
     // flag spawnpoint coords and rotation
     public static int redx, redy, redz;
@@ -63,6 +84,7 @@ public class skarmiumEvents implements Listener {
     // scores
     public static int redscore = 0;
     public static int bluescore = 0;
+    public static int winning_score = 3;
 
 
     @EventHandler
@@ -435,25 +457,49 @@ public class skarmiumEvents implements Listener {
                 // now check if is at spawn
                 boolean isAtFlagSpawn = (x == redx) && (y == redy) && (z == redz);
                 if (isAtFlagSpawn) {
-                    // check if player has anything in helmet slot, then check if player is bearing an enemy flag
-                    if (player.getInventory().getHelmet() != null) {
-                        if (player.getInventory().getHelmet().getItemMeta().equals(skarmiumItems.blueFlag.getItemMeta())) {
-                            // check if scoreboard is set
-                            if (player.getScoreboard().getObjective("skarmiumScores") != null) {
-                                // score +1
-                                redscore++;
-                                player.getScoreboard().getObjective("skarmiumScores").getScore("§c§lRed Team").setScore(redscore);
-                                player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§c" + teamName + " §r§ehas scored a point!");
-                            } else {
-                                player.sendMessage(skarmiumCommands.prefix_error + "You can't score because a scoreboard is not yet setup");
+                    // check if ally flag is at spawn
+                    NBTTileEntity block_nbt = new NBTTileEntity(player.getWorld().getBlockAt(redx,redy,redz).getState());
+                    boolean isRedFlag = player.getWorld().getBlockAt(redx, redy, redz).getType() == Material.RED_BANNER && block_nbt.getString("CustomName").equalsIgnoreCase("{\"text\":\"§c§lRed Flag§f\"}");
+                    if (isRedFlag) {
+
+                        // check if player has anything in helmet slot, then check if player is bearing an enemy flag
+                        if (player.getInventory().getHelmet() != null) {
+                            if (player.getInventory().getHelmet().getItemMeta().equals(skarmiumItems.blueFlag.getItemMeta())) {
+                                // check if scoreboard is set
+                                if (player.getScoreboard().getObjective("skarmiumScores") != null) {
+                                    // play ding!
+                                    player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
+
+                                    // score +1
+                                    redscore++;
+                                    player.getScoreboard().getObjective("skarmiumScores").getScore("§c§lRed Team").setScore(redscore);
+                                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§c" + teamName + " §r§ehas scored a point!");
+
+                                    // if reach limit = win!
+                                    if (redscore == winning_score) {
+                                        // win
+                                        player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§c" + teamName + " §r§ehas won the game!");
+                                        displayWinTitle("red");
+                                        // reset score
+                                        skarmiumEvents.redscore = 0;
+                                        skarmiumEvents.bluescore = 0;
+                                        player.getScoreboard().getObjective("skarmiumScores").getScore("§c§lRed Team").setScore(skarmiumEvents.redscore);
+                                        player.getScoreboard().getObjective("skarmiumScores").getScore("§9§lBlue Team").setScore(skarmiumEvents.bluescore);
+
+                                        player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "Flag scores have been reset");
+                                    }
+
+                                } else {
+                                    player.sendMessage(skarmiumCommands.prefix_error + "You can't score because a scoreboard is not yet setup");
+                                }
+                                // clear flag from self
+                                player.getInventory().setHelmet(null);
+                                // respawn enemy flag
+                                player.getWorld().getBlockAt(bluex, bluey, bluez).setType(Material.BLUE_BANNER);
+                                NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(bluex, bluey, bluez).getState());
+                                banner_nbt.setString("CustomName", "{\"text\":\"§9§lBlue Flag§f\"}");
+                                player.getWorld().getBlockAt(bluex, bluey, bluez).setBlockData(bluerot);
                             }
-                            // clear flag from self
-                            player.getInventory().setHelmet(null);
-                            // respawn enemy flag
-                            player.getWorld().getBlockAt(bluex, bluey, bluez).setType(Material.BLUE_BANNER);
-                            NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(bluex, bluey, bluez).getState());
-                            banner_nbt.setString("CustomName", "{\"text\":\"§9§lBlue Flag§f\"}");
-                            player.getWorld().getBlockAt(bluex, bluey, bluez).setBlockData(bluerot);
                         }
                     }
                 }
@@ -462,25 +508,48 @@ public class skarmiumEvents implements Listener {
                 // is blue
                 boolean isAtFlagSpawn = (x == bluex) && (y == bluey) && (z == bluez);
                 if (isAtFlagSpawn) {
-                    // check if player has anything in helmet slot, then check if player is bearing an enemy flag
-                    if (player.getInventory().getHelmet() != null) {
-                        if (player.getInventory().getHelmet().getItemMeta().equals(skarmiumItems.redFlag.getItemMeta())) {
-                            // check if scoreboard is set
-                            if (player.getScoreboard().getObjective("skarmiumScores") != null) {
-                                // score +1
-                                bluescore++;
-                                player.getScoreboard().getObjective("skarmiumScores").getScore("§9§lBlue Team").setScore(bluescore);
-                                player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§9" + teamName + " §r§ehas scored a point!");
-                            } else {
-                                player.sendMessage(skarmiumCommands.prefix_error + "You can't score because a scoreboard is not yet set up");
+                    // do same here
+                    NBTTileEntity block_nbt = new NBTTileEntity(player.getWorld().getBlockAt(bluex,bluey,bluez).getState());
+                    boolean isBlueFlag = player.getWorld().getBlockAt(bluex, bluey, bluez).getType() == Material.BLUE_BANNER && block_nbt.getString("CustomName").equalsIgnoreCase("{\"text\":\"§9§lBlue Flag§f\"}");
+                    if (isBlueFlag) {
+
+                        // check if player has anything in helmet slot, then check if player is bearing an enemy flag
+                        if (player.getInventory().getHelmet() != null) {
+                            if (player.getInventory().getHelmet().getItemMeta().equals(skarmiumItems.redFlag.getItemMeta())) {
+                                // check if scoreboard is set
+                                if (player.getScoreboard().getObjective("skarmiumScores") != null) {
+                                    // play ding!
+                                    player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
+
+                                    // score +1
+                                    bluescore++;
+                                    player.getScoreboard().getObjective("skarmiumScores").getScore("§9§lBlue Team").setScore(bluescore);
+                                    player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§9" + teamName + " §r§ehas scored a point!");
+
+                                    // limit == win
+                                    if (bluescore == winning_score) {
+                                        // win
+                                        player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "§9" + teamName + " §r§ehas won the game!");
+                                        displayWinTitle("blue");
+                                        // reset score
+                                        skarmiumEvents.redscore = 0;
+                                        skarmiumEvents.bluescore = 0;
+                                        player.getScoreboard().getObjective("skarmiumScores").getScore("§c§lRed Team").setScore(skarmiumEvents.redscore);
+                                        player.getScoreboard().getObjective("skarmiumScores").getScore("§9§lBlue Team").setScore(skarmiumEvents.bluescore);
+
+                                        player.getServer().broadcastMessage(skarmiumCommands.prefix_alert + "Flag scores have been reset");
+                                    }
+                                } else {
+                                    player.sendMessage(skarmiumCommands.prefix_error + "You can't score because a scoreboard is not yet set up");
+                                }
+                                // clear flag from self
+                                player.getInventory().setHelmet(null);
+                                // respawn enemy flag
+                                player.getWorld().getBlockAt(redx, redy, redz).setType(Material.RED_BANNER);
+                                NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(redx, redy, redz).getState());
+                                banner_nbt.setString("CustomName", "{\"text\":\"§c§lRed Flag§f\"}");
+                                player.getWorld().getBlockAt(redx, redy, redz).setBlockData(redrot);
                             }
-                            // clear flag from self
-                            player.getInventory().setHelmet(null);
-                            // respawn enemy flag
-                            player.getWorld().getBlockAt(redx, redy, redz).setType(Material.RED_BANNER);
-                            NBTTileEntity banner_nbt = new NBTTileEntity(player.getWorld().getBlockAt(redx, redy, redz).getState());
-                            banner_nbt.setString("CustomName", "{\"text\":\"§c§lRed Flag§f\"}");
-                            player.getWorld().getBlockAt(redx, redy, redz).setBlockData(redrot);
                         }
                     }
                 }
@@ -494,5 +563,4 @@ public class skarmiumEvents implements Listener {
             // meh. will spam.
         }
     }
-
 }
